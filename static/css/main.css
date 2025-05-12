@@ -1,0 +1,67 @@
+.navbar {
+    background-color: #05386B;
+}
+
+#my_card {
+    border-width: 5px;
+    width: 68%;
+    margin-right: auto;
+    margin-left: auto;
+    border-style: solid;
+    transition: border-color 0.3s, border-width 0.3s;
+}
+
+#my_card:hover {
+    background-color: #05386B;
+    color: white;
+    border-color: #5CDB95;
+    border-width: 8px;
+}
+
+#log {
+    position: relative;
+    margin-left: 10px;
+    margin-right: 10px;
+
+    &:before {
+        background-color: #05386B;
+        content: '';
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        margin-top: -12px;
+        width: 24px;
+        height: 24px;
+        border: 2px solid;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.5s;
+        animation: 0.8s linear infinite rotate;
+    }
+
+    &.sending {
+        pointer-events: none;
+        cursor: not-allowed;
+
+        &:before {
+            transition-delay: 0.5s;
+            transition-duration: 1s;
+            opacity: 1;
+        }
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#reg {
+    background-color: #5CDB95;
+}
