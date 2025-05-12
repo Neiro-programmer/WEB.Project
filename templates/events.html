@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<p>
+    {% if current_user.is_authenticated %}
+    <br>
+    <a class="btn btn-primary" href="/add/event">Add event</a>
+    {% endif %}
+</p>
+{% for event in events %}
+<div class="card" id="my_card">
+    <div class="card-body">
+        <h4 class="card-title">{{ event.name }}</h4>
+        <h5 class="card-subtitle">Окончание: {{ event.ending_time }}</h5>
+        <div class="card-text">
+            <p>Описание: {{ event.description }} </p>
+            <p>Контакт: {{ event.contact }}</p>
+            <p>Тг: {{ event.telegram }}</p>
+        </div>
+    </div>
+</div>
+{% if current_user.id in moderators or current_user.id in admins or current_user.id == event.user_id %}
+<a class="btn btn-warning" href="/edit/event/{{ event.id }}" style="margin-left: 16%; margin-top: 5px">Edit Event</a>
+{% endif %}
+{% if current_user.id in admins or current_user.id == event.user_id %}
+<a class="btn btn-danger" href="/delete/event/{{ event.id }}" style="margin-top: 5px">Delete Event</a>
+{% endif %}
+<br>
+{% endfor %}
+
+{% endblock %}

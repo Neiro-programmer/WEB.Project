@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Добавить событие</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(class="form-control") }}<br>
+    </p>
+    <p>
+        {{ form.description.label }}<br>
+        {{ form.description(class="form-control") }}<br>
+    </p>
+    <p>
+        {{ form.ending_time.label }}<br>
+        {{ form.ending_time(class="form-control") }}<br>
+    </p>
+    <p>
+        {{ form.contact.label }}<br>
+        {{ form.contact(class="form-control", type="tel") }}<br>
+    </p>
+    <p>
+        {{ form.telegram.label }}<br>
+        {{ form.telegram(class="form-control") }}<br>
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <div>
+        {{ message }}
+    </div>
+</form>
+<br>
+{% endblock %}
