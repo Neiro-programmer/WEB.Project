@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Добавить событие</h1>
-<form action="" method="post">
+<h1>{{ title }}</h1>
+<form action="" method="post" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <p>
         {{ form.name.label }}<br>
@@ -23,10 +23,25 @@
         {{ form.telegram.label }}<br>
         {{ form.telegram(class="form-control") }}<br>
     </p>
+    <p>
+        {{ form.file.label }}<br>
+        {{ form.file(class="form-control-file") }}<br>
+    </p>
+    <p>
+        {{ form.category.label }}<br>
+        {{ form.category(class="form-control-select") }}<br>
+    </p>
+
+    {% if path %}
+    <img src="{{ path }}" alt="Картинка не найдена">
+    <br>
+    {% endif %}
+
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     <div>
         {{ message }}
     </div>
 </form>
 <br>
+
 {% endblock %}

@@ -1,9 +1,10 @@
+import os
 import string
 from datetime import datetime
-from random import shuffle, sample
-
+from os import abort
+from random import shuffle, sample, random, choices
 import sqlalchemy
-from flask import url_for, Flask, render_template, redirect
+from flask import url_for, Flask, render_template, redirect, request
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
@@ -31,10 +32,10 @@ def make_secret_key():
     for i in sample(a, 25):
         s += i
     app.config['SECRET_KEY'] = s
+    return s
 
 
-make_secret_key()
-
+app.secret_key = make_secret_key()
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -93,6 +94,16 @@ def register():
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return 'Не найдена страница, пожалуйста, вернитесь назад'
+
+
+@app.errorhandler(400)
+def icorrrect_request(e):
+    return f'Некорректный запрос, пожалуйста, попробуйте снова, {e}'
+
+
 @app.route('/events', methods=['GET', 'POST'])
 def add_events():
     db_sess = db_session.create_session()
@@ -111,7 +122,8 @@ def add_event():
             starting_time=datetime.now(),
             contact=form.contact.data,
             telegram=form.telegram.data,
-            user_id=current_user.id
+            user_id=current_user.id,
+            category=form.category.data,
         )
         try:
             ending_time = form.ending_time.data
@@ -123,11 +135,72 @@ def add_event():
                                        message='Неправильный формат времени окончания')
         except Exception:
             return render_template('add_event_form.html', form=form, message='Неправильный формат времени окончания')
-        current_user.events.append(event)
-        db_sess.merge(current_user)
+        f = form.file.data
+        if f:
+            random_number = ''.join(choices('0123456789', k=10))
+            path = os.path.join('..', 'static', 'img') + '/' + str(current_user.id) + str(random_number) + '.png'
+            while os.path.exists(path):
+                random_number = ''.join(choices('0123456789', k=10))
+                path = '../static/img' + str(current_user.id) + str(random_number)
+            with open(path[3:], 'wb') as file:
+                file.write(f.read())
+            event.file = path
+            current_user.events.append(event)
+            db_sess.merge(current_user)
+            db_sess.commit()
+            return redirect("/events")
+    return render_template('add_event_form.html', form=form, title='Добавление события')
+
+
+@app.route('/edit/event/<int:id>', methods=['GET', 'POST'])
+def edit_event(id):
+    form = AddEventForm()
+    path = ''
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        event = db_sess.query(Event).filter(Event.id == id, (
+                (Event.user == current_user) | (current_user.id in ADMINS_ID) | (
+                current_user.id in MODERATORS_ID))).first()
+        if event:
+            form.name.data = event.name
+            form.description.data = event.description
+            form.contact.data = event.contact
+            form.telegram.data = event.telegram
+            form.ending_time.data = event.ending_time
+            path = event.file
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        event = db_sess.query(Event).filter(Event.id == id, (
+                (Event.user == current_user) | (current_user.id in ADMINS_ID) | (
+                current_user.id in MODERATORS_ID))).first()
+        if event:
+            event.name = form.name.data
+            event.description = form.description.data
+            event.contact = form.contact.data
+            event.telegram = form.telegram.data
+            event.ending_time = form.ending_time.data
+
+            db_sess.commit()
+            return redirect("/events")
+        else:
+            abort(404)
+    return render_template('add_event_form.html', title="Редактирование события", form=form, path=path)
+
+
+@app.route('/delete/event/<int:id>', methods=['GET', 'POST'])
+def delete_event(id):
+    db_sess = db_session.create_session()
+    event = db_sess.query(Event).filter(Event.id == id, (
+            (Event.user == current_user) | (current_user.id in ADMINS_ID) | (
+            current_user.id in MODERATORS_ID))).first()
+    if event:
+        db_sess.delete(event)
         db_sess.commit()
-        return redirect("/")
-    return render_template('add_event_form.html', form=form)
+        return redirect("/events")
+    else:
+        abort(404)
 
 
 if __name__ == '__main__':

@@ -8,13 +8,17 @@
 </p>
 {% for event in events %}
 <div class="card" id="my_card">
-    <div class="card-body">
-        <h4 class="card-title">{{ event.name }}</h4>
-        <h5 class="card-subtitle">Окончание: {{ event.ending_time }}</h5>
-        <div class="card-text">
-            <p>Описание: {{ event.description }} </p>
-            <p>Контакт: {{ event.contact }}</p>
-            <p>Тг: {{ event.telegram }}</p>
+    <div class="card-body d-flex">
+        <img src="{{ event.file }}" alt="Такой картинки нет" class="event-image">
+        <div class="event-details">
+            <h4 class="card-title">{{ event.name }}</h4>
+            <h5 class="card-subtitle">Окончание: {{ event.ending_time }}</h5>
+            <div class="card-text">
+                <p>Описание: {{ event.description }} </p>
+                <p>Контакт: {{ event.contact }}</p>
+                <p>Тг: {{ event.telegram }}</p>
+                <p>Категория: {{ event.category }}</p>
+            </div>
         </div>
     </div>
 </div>
