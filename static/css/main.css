@@ -2,6 +2,17 @@
     background-color: #05386B;
 }
 
+.blue {
+    color: #05386B;
+}
+
+.page {
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 #my_card {
     border-width: 5px;
     width: 68%;
@@ -18,50 +29,128 @@
     border-width: 8px;
 }
 
+.pic {
+  border-radius: 20px;
+  position: absolute; /* Абсолютное позиционирование */
+  width: 300px; /* Ширина блока */
+ /* Поля вокруг текста */
+  left: 20px;
+  top: 200px
+
+}
+
+.imagee {
+  border-radius: 20px;
+  position: absolute; /* Абсолютное позиционирование */
+  width: 300px; /* Ширина блока */
+ /* Поля вокруг текста */
+  left: 1200px;
+  top: 230px
+
+}
+
+.content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 120px 20px;
+    flex: 1 1 auto;
+}
+
 #log {
-    position: relative;
-    margin-left: 10px;
-    margin-right: 10px;
+  position: relative;
+  margin-left: 10px;
+   margin-right: 10px;
+
+  &:before {
+    background-color: #05386B;
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    margin-top: -12px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.5s;
+    animation: 0.8s linear infinite rotate;
+  }
+  &.sending{
+    pointer-events: none;
+    cursor: not-allowed;
 
     &:before {
-        background-color: #05386B;
-        content: '';
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        margin-top: -12px;
-        width: 24px;
-        height: 24px;
-        border: 2px solid;
-        border-left-color: transparent;
-        border-right-color: transparent;
-        border-radius: 50%;
-        opacity: 0;
-        transition: opacity 0.5s;
-        animation: 0.8s linear infinite rotate;
+      transition-delay: 0.5s;
+      transition-duration: 1s;
+      opacity: 1;
     }
-
-    &.sending {
-        pointer-events: none;
-        cursor: not-allowed;
-
-        &:before {
-            transition-delay: 0.5s;
-            transition-duration: 1s;
-            opacity: 1;
-        }
-    }
+  }
 }
 
 @keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 #reg {
     background-color: #5CDB95;
+}
+
+#bg {
+    background-color: #5CDB95;
+}
+#fd {
+    color: #05386B;
+}
+#c {
+    color: #05386B !important;
+}
+
+#cpp {
+    color: #05386B !important;
+}
+#zg {
+    font-size: 60px;
+    color: #05386B;
+}
+
+#loginform {
+    margin-left: 550px;
+    margin-right: 550px;
+    margin-top: 140px;
+}
+
+#otstup {
+    margin-top: 40px;
+}
+
+#bg_b {
+    margin-top: 20px;
+    background-color: #05386B;
+}
+
+#btn_blu {
+    color: #05386B;
+}
+
+#regform {
+    margin-left: 550px;
+    margin-right: 550px;
+    margin-top: 15px;
+}
+
+#niz {
+    margin-bottom: 20px;
+}
+
+.box {
+    width: 400px;
+    display: inline-block;
 }
