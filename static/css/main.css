@@ -195,3 +195,9 @@
 #main {
     align: center
 }
+
+.map {
+    width: 600px;
+    height: 600px;
+    background: #333;
+}
