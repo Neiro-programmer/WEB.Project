@@ -113,10 +113,6 @@ def add_events():
         events = db_sess.query(Event).all()
     elif form.city.data != 'Все' and form.categ.data == 'Все':
 
-
-
-
-
         # ДОДЕЛАТЬ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         pass
 
@@ -125,12 +121,8 @@ def add_events():
         events = db_sess.query(Event).filter(Event.category == form.categ.data).all()
     elif form.city.data != 'Все' and form.categ.data != 'Все':
 
-
-
-
         # ДОДЕЛАТЬ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         pass
-
 
     return render_template('events.html', events=events, moderators=MODERATORS_ID, admins=ADMINS_ID, form=form)
 
@@ -168,6 +160,13 @@ def add_event():
                 path = '../static/img' + str(current_user.id) + str(random_number)
             with open(path[3:], 'wb') as file:
                 file.write(f.read())
+            event.file = path
+            current_user.events.append(event)
+            db_sess.merge(current_user)
+            db_sess.commit()
+            return redirect("/events")
+        else:
+            path = '../static/img/default.png'
             event.file = path
             current_user.events.append(event)
             db_sess.merge(current_user)
