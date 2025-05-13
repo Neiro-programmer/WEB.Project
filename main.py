@@ -16,6 +16,7 @@ from data.users import User
 from static.forms.loginform import LoginForm
 from static.forms.registerform import RegisterForm
 from static.forms.add_event_form import AddEventForm
+from static.forms.sorting_city_name import SortingForm
 
 app = Flask(__name__)
 ADMINS_ID = [1, 2]
@@ -106,9 +107,32 @@ def icorrrect_request(e):
 
 @app.route('/events', methods=['GET', 'POST'])
 def add_events():
+    form = SortingForm()
     db_sess = db_session.create_session()
-    events = db_sess.query(Event).all()
-    return render_template('events.html', events=events, moderators=MODERATORS_ID, admins=ADMINS_ID)
+    if form.city.data == 'Все' and form.categ.data == 'Все':
+        events = db_sess.query(Event).all()
+    elif form.city.data != 'Все' and form.categ.data == 'Все':
+
+
+
+
+
+        # ДОДЕЛАТЬ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        pass
+
+
+    elif form.city.data == 'Все' and form.categ.data != 'Все':
+        events = db_sess.query(Event).filter(Event.category == form.categ.data).all()
+    elif form.city.data != 'Все' and form.categ.data != 'Все':
+
+
+
+
+        # ДОДЕЛАТЬ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        pass
+
+
+    return render_template('events.html', events=events, moderators=MODERATORS_ID, admins=ADMINS_ID, form=form)
 
 
 @app.route('/add/event', methods=['GET', 'POST'])
@@ -167,6 +191,7 @@ def edit_event(id):
             form.contact.data = event.contact
             form.telegram.data = event.telegram
             form.ending_time.data = event.ending_time
+            form.category.data = event.category
             path = event.file
         else:
             abort(404)
@@ -181,12 +206,22 @@ def edit_event(id):
             event.contact = form.contact.data
             event.telegram = form.telegram.data
             event.ending_time = form.ending_time.data
-
+            event.category = form.category.data
+            f = form.file.data
+            if f:
+                random_number = ''.join(choices('0123456789', k=10))
+                path = os.path.join('..', 'static', 'img') + '/' + str(current_user.id) + str(random_number) + '.png'
+                while os.path.exists(path):
+                    random_number = ''.join(choices('0123456789', k=10))
+                    path = '../static/img' + str(current_user.id) + str(random_number)
+                with open(path[3:], 'wb') as file:
+                    file.write(f.read())
+                event.file = path
             db_sess.commit()
             return redirect("/events")
         else:
             abort(404)
-    return render_template('add_event_form.html', title="Редактирование события", form=form, path=path)
+    return render_template('edit_event_form.html', title="Редактирование события", form=form, path=path)
 
 
 @app.route('/delete/event/<int:id>', methods=['GET', 'POST'])

@@ -5,6 +5,11 @@
     <br>
     <a class="btn btn-primary" href="/add/event">Add event</a>
     {% endif %}
+    <form action="" method="post">
+        <div>{{ form.city.label }} {{form.city(class="form-control") }}</div>
+        <div> {{ form.categ.label }} {{ form.categ(class="form-control") }}</div><br>
+        <div>{{ form.submit(type="submit", class="btn btn-primary") }}</div>
+    </form>
 </p>
 {% for event in events %}
 <div class="card" id="my_card">
