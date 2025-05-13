@@ -70,26 +70,20 @@
 
 .pic {
     border-radius: 20px;
-    /*position: absolute; /* Абсолютное позиционирование */
-    width: 300px; /* Ширина блока */
-    /* Поля вокруг текста
-     left: 20px; */
+    width: 300px;
     margin-top: 200px
 
 }
 
 .imagee {
     border-radius: 20px;
-    /*  position: absolute; /* Абсолютное позиционирование */
-    width: 300px; /* Ширина блока */
-    /* Поля вокруг текста
-     left: 1200px; */
+    width: 300px;
     margin-top: 230px
 
 }
 
 .content {
-    max-width: 800px;
+    max-width: 300%;
     margin: 0 auto;
     padding: 120px 20px;
     flex: 1 1 auto;
