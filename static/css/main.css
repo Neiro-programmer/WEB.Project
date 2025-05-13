@@ -31,21 +31,21 @@
 
 .pic {
   border-radius: 20px;
-  position: absolute; /* Абсолютное позиционирование */
+  /*position: absolute; /* Абсолютное позиционирование */
   width: 300px; /* Ширина блока */
- /* Поля вокруг текста */
-  left: 20px;
-  top: 200px
+ /* Поля вокруг текста
+  left: 20px; */
+  margin-top: 200px
 
 }
 
 .imagee {
   border-radius: 20px;
-  position: absolute; /* Абсолютное позиционирование */
+/*  position: absolute; /* Абсолютное позиционирование */
   width: 300px; /* Ширина блока */
- /* Поля вокруг текста */
-  left: 1200px;
-  top: 230px
+ /* Поля вокруг текста
+  left: 1200px; */
+  margin-top: 230px
 
 }
 
@@ -153,4 +153,8 @@
 .box {
     width: 400px;
     display: inline-block;
+}
+
+#main {
+    align: center
 }
