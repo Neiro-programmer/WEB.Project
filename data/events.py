@@ -22,4 +22,5 @@ class Event(SqlAlchemyBase, UserMixin, SerializerMixin):
     category = sqlalchemy.Column(
         Enum('Все', 'Спорт', 'Музыка', 'Искусство', 'Общение', 'Психология', 'Игры', 'Дегустация',
              name='event_category'), nullable=False, default=0)
+    location = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     user = orm.relationship('User')

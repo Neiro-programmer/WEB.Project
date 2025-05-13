@@ -14,5 +14,6 @@ class AddEventForm(FlaskForm):
     category = SelectField('Категория', choices=sorted(
         ['Все', 'Спорт', 'Музыка', 'Искусство', 'Общение', 'Психология', 'Игры', 'Дегустация']),
                            validators=[DataRequired()])
+    location = StringField('Местоположение')
 
     submit = SubmitField('Добавить')

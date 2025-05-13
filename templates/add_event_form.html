@@ -36,14 +36,15 @@
     <img src="{{ path }}" alt="Картинка не найдена">
     <br>
     {% endif %}
-    <div id="map-test" class="map"></div>
-    <br>
+     <p>
+        {{ form.location.label }}<br>
+        {{ form.location(class="form-control-select") }}<br>
+    </p>
     <br>
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     <div>
         {{ message }}
     </div>
 </form>
-<script src="https://api-maps.yandex.ru/2.1/?apikey=22b5b2ce-8e49-463f-8a47-c063d91e57b0&lang=ru_RU"></script>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+
 {% endblock %}

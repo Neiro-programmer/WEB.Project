@@ -161,6 +161,7 @@ def add_event():
             with open(path[3:], 'wb') as file:
                 file.write(f.read())
             event.file = path
+            event.location = form.location.data
             current_user.events.append(event)
             db_sess.merge(current_user)
             db_sess.commit()
@@ -236,6 +237,17 @@ def delete_event(id):
         return redirect("/events")
     else:
         abort(404)
+
+
+@app.route('/get_route/event/<id>', methods=['GET', 'POST'])
+def get_route_event(id):
+    db_sess = db_session.create_session()
+    event = db_sess.query(Event).filter(Event.id == id).first()
+    if not event:
+        abort(404)
+    else:
+        location = event.location
+        return render_template('get_route.html', location=location)
 
 
 if __name__ == '__main__':

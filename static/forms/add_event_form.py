@@ -14,5 +14,5 @@ class AddEventForm(FlaskForm):
     category = SelectField('Категория', choices=sorted(
         ['Все', 'Спорт', 'Музыка', 'Искусство', 'Общение', 'Психология', 'Игры', 'Дегустация']),
                            validators=[DataRequired()])
-
+    location = StringField('Укажите местоположение в формате: город, улица номер', validators=[DataRequired()])
     submit = SubmitField('Добавить')

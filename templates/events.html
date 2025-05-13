@@ -5,11 +5,12 @@
     <br>
     <a class="btn btn-primary" href="/add/event">Add event</a>
     {% endif %}
-    <form action="" method="post">
-        <div>{{ form.city.label }} {{form.city(class="form-control") }}</div>
-        <div> {{ form.categ.label }} {{ form.categ(class="form-control") }}</div><br>
-        <div>{{ form.submit(type="submit", class="btn btn-primary") }}</div>
-    </form>
+<form action="" method="post">
+    <div>{{ form.city.label }} {{form.city(class="form-control") }}</div>
+    <div> {{ form.categ.label }} {{ form.categ(class="form-control") }}</div>
+    <br>
+    <div>{{ form.submit(type="submit", class="btn btn-primary") }}</div>
+</form>
 </p>
 {% for event in events %}
 <div class="card" id="my_card">
@@ -27,8 +28,10 @@
         </div>
     </div>
 </div>
+<a class="btn btn-primary" href="/get_route/event/{{ event.id }}" style="margin-left: 16%; margin-top: 5px">Get
+    route</a>
 {% if current_user.id in moderators or current_user.id in admins or current_user.id == event.user_id %}
-<a class="btn btn-warning" href="/edit/event/{{ event.id }}" style="margin-left: 16%; margin-top: 5px">Edit Event</a>
+<a class="btn btn-warning" href="/edit/event/{{ event.id }}" style="margin-top: 5px">Edit Event</a>
 {% endif %}
 {% if current_user.id in admins or current_user.id == event.user_id %}
 <a class="btn btn-danger" href="/delete/event/{{ event.id }}" style="margin-top: 5px">Delete Event</a>
