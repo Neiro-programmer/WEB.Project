@@ -185,6 +185,7 @@ def edit_event(id):
                 (Event.user == current_user) | (current_user.id in ADMINS_ID) | (
                 current_user.id in MODERATORS_ID))).first()
         if event:
+
             form.name.data = event.name
             form.description.data = event.description
             form.contact.data = event.contact
