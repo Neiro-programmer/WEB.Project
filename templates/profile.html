@@ -1,0 +1,19 @@
+{% extends "BAZA.html" %}
+{% block content %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.surname.label }}<br>
+            {{ form.surname(class="form-control") }}<br>
+        </p>
+        <div>{{ form.submit(type="submit", class="btn btn-primary") }}</div>
+    </form>
+{% endblock %}

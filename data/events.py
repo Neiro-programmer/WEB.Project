@@ -19,6 +19,7 @@ class Event(SqlAlchemyBase, UserMixin, SerializerMixin):
     file = sqlalchemy.Column(sqlalchemy.String, default='../static/img/default.png')
     user_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
+    cities = sqlalchemy.Column(sqlalchemy.String, nullable=False, index=True)
     category = sqlalchemy.Column(
         Enum('Все', 'Спорт', 'Музыка', 'Искусство', 'Общение', 'Психология', 'Игры', 'Дегустация',
              name='event_category'), nullable=False, default=0)

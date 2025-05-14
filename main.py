@@ -15,6 +15,8 @@ from data.events import Event
 from data.users import User
 from mail_sender import send_email
 from proverka import check_email
+from static.forms.edit_event_form import EditEventForm
+from static.forms.edit_profile_info import EditProfile
 from static.forms.extracodeform import ExtraCodeForm
 from static.forms.loginform import LoginForm
 from static.forms.registerform import RegisterForm
@@ -25,6 +27,7 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from data.db_session import SqlAlchemyBase
 from flask import session
+from cities import get_cities
 
 app = Flask(__name__)
 ADMINS_ID = [1, 2]
@@ -162,18 +165,29 @@ def add_events():
     if form.city.data == 'Все' and form.categ.data == 'Все':
         events = db_sess.query(Event).all()
     elif form.city.data != 'Все' and form.categ.data == 'Все':
-
-        # ДОДЕЛАТЬ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        pass
-
-
+        events = db_sess.query(Event).filter(Event.cities == form.city.data.capitalize()).all()
     elif form.city.data == 'Все' and form.categ.data != 'Все':
         events = db_sess.query(Event).filter(Event.category == form.categ.data).all()
     elif form.city.data != 'Все' and form.categ.data != 'Все':
+        events = db_sess.query(Event).filter(Event.category == form.categ.data,
+                                             Event.cities == form.city.data.capitalize()).all()
+    return render_template('events.html', events=events, moderators=MODERATORS_ID, admins=ADMINS_ID, form=form)
 
-        # ДОДЕЛАТЬ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        pass
 
+@login_required
+@app.route('/events/<int:id>', methods=['GET', 'POST'])
+def events_user(id):
+    db_sess = db_session.create_session()
+    form = SortingForm()
+    if form.city.data == 'Все' and form.categ.data == 'Все':
+        events = db_sess.query(Event).filter(Event.user_id == id).all()
+    elif form.city.data != 'Все' and form.categ.data == 'Все':
+        events = db_sess.query(Event).filter(Event.cities == form.city.data.capitalize(), Event.user_id == id).all()
+    elif form.city.data == 'Все' and form.categ.data != 'Все':
+        events = db_sess.query(Event).filter(Event.category == form.categ.data, Event.user_id == id).all()
+    elif form.city.data != 'Все' and form.categ.data != 'Все':
+        events = db_sess.query(Event).filter(Event.category == form.categ.data,
+                                             Event.cities == form.city.data.capitalize(), Event.user_id == id).all()
     return render_template('events.html', events=events, moderators=MODERATORS_ID, admins=ADMINS_ID, form=form)
 
 
@@ -213,14 +227,34 @@ def add_event():
             with open(path[3:], 'wb') as file:
                 file.write(f.read())
             event.file = path
-            event.location = form.location.data
-            current_user.events.append(event)
-            db_sess.merge(current_user)
-            db_sess.commit()
-            return redirect("/events")
+            fl = False
+            for i in get_cities():
+                if i in form.location.data or i.lower() in form.location.data:
+                    event.cities = i
+                    fl = True
+                    break
+            if not fl:
+                return render_template('add_event_form.html', form=form, title='Добавление события',
+                                       message='Неправильный формат локации: укажите название города с большой или маленькой буквы, после этого через запятую улицу')
+            else:
+                event.location = form.location.data
+                current_user.events.append(event)
+                db_sess.merge(current_user)
+                db_sess.commit()
+                return redirect("/events")
         else:
+            fl = False
+            for i in get_cities():
+                if i in form.location.data or i.lower() in form.location.data:
+                    event.cities = i
+                    fl = True
+                    break
+            if not fl:
+                return render_template('add_event_form.html', form=form, title='Добавление события',
+                                       message='Неправильный формат локации: укажите название города с большой или маленькой буквы, после этого через запятую улицу')
             path = '../static/img/default.png'
             event.file = path
+            event.location = form.location.data
             current_user.events.append(event)
             db_sess.merge(current_user)
             db_sess.commit()
@@ -230,7 +264,7 @@ def add_event():
 
 @app.route('/edit/event/<int:id>', methods=['GET', 'POST'])
 def edit_event(id):
-    form = AddEventForm()
+    form = EditEventForm()
     path = ''
     if request.method == "GET":
         db_sess = db_session.create_session()
@@ -238,13 +272,13 @@ def edit_event(id):
                 (Event.user == current_user) | (current_user.id in ADMINS_ID) | (
                 current_user.id in MODERATORS_ID))).first()
         if event:
-
             form.name.data = event.name
             form.description.data = event.description
             form.contact.data = event.contact
             form.telegram.data = event.telegram
             form.ending_time.data = event.ending_time
             form.category.data = event.category
+            form.location.data = event.location
             path = event.file
         else:
             abort(404)
@@ -270,8 +304,28 @@ def edit_event(id):
                 with open(path[3:], 'wb') as file:
                     file.write(f.read())
                 event.file = path
-            db_sess.commit()
-            return redirect("/events")
+                fl = False
+                for i in get_cities():
+                    if i in form.location.data or i.lower() in form.location.data:
+                        event.cities = i
+                        fl = True
+                if not fl:
+                    return render_template('add_event_form.html', form=form, title='Добавление события',
+                                           message='Неправильный формат локации: укажите название города с большой или маленькой буквы')
+                event.location = form.location.data
+                db_sess.commit()
+            else:
+                fl = False
+                for i in get_cities():
+                    if i in form.location.data or i.lower() in form.location.data:
+                        event.cities = i
+                        fl = True
+                if not fl:
+                    return render_template('add_event_form.html', form=form, title='Добавление события',
+                                           message='Неправильный формат локации: укажите название города с большой или маленькой буквы')
+                event.location = form.location.data
+                db_sess.commit()
+                return redirect("/events")
         else:
             abort(404)
     return render_template('edit_event_form.html', title="Редактирование события", form=form, path=path)
@@ -300,6 +354,35 @@ def get_route_event(id):
     else:
         location = event.location
         return render_template('get_route.html', location=location)
+
+
+@app.route('/profile/<int:id>', methods=['GET', 'POST'])
+def profile(id):
+    form = EditProfile()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == id).first()
+        if not user:
+            abort(404)
+        else:
+            form.name.data = user.name
+            form.surname.data = user.surname
+            form.password.data = 'Пароль зашифрован и не будет показан, но вы можете его изменить'
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == id).first()
+        if not user:
+            abort(404)
+        else:
+            user.name = form.name.data
+            user.surname = form.surname.data
+            if form.password.data != 'Пароль зашифрован и не будет показан, но вы можете его изменить':
+                user.set_password(form.password.data)
+            db_sess.commit()
+            return redirect(f"/")
+    else:
+        print(form.errors)
+    return render_template('profile.html', form=form)
 
 
 if __name__ == '__main__':

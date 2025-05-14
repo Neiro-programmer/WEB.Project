@@ -1,46 +1,51 @@
 {% extends "BAZA.html" %}
 {% block content %}
-<h1>{{ title }}</h1>
-<form action="" method="post" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.name.label }}<br>
-        {{ form.name(class="form-control") }}<br>
-    </p>
-    <p>
-        {{ form.description.label }}<br>
-        {{ form.description(class="form-control") }}<br>
-    </p>
-    <p>
-        {{ form.ending_time.label }}<br>
-        {{ form.ending_time(class="form-control") }}<br>
-    </p>
-    <p>
-        {{ form.contact.label }}<br>
-        {{ form.contact(class="form-control", type="tel") }}<br>
-    </p>
-    <p>
-        {{ form.telegram.label }}<br>
-        {{ form.telegram(class="form-control") }}<br>
-    </p>
-    <p>
-        {{ form.file.label }}<br>
-        {{ form.file(class="form-control-file") }}<br>
-    </p>
-    <p>
-        {{ form.category.label }}<br>
-        {{ form.category(class="form-control-select") }}<br>
-    </p>
+    <h1>{{ title }}</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.ending_time.label }}<br>
+            {{ form.ending_time(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.contact.label }}<br>
+            {{ form.contact(class="form-control", type="tel") }}<br>
+        </p>
+        <p>
+            {{ form.telegram.label }}<br>
+            {{ form.telegram(class="form-control") }}<br>
+        </p>
+        <p>
+            {{ form.file.label }}<br>
+            {{ form.file(class="form-control-file") }}<br>
+        </p>
+        <p>
+            {{ form.category.label }}<br>
+            {{ form.category(class="form-control-select") }}<br>
+        </p>
 
-    {% if path %}
-    <img src="{{ path }}" alt="Картинка не найдена">
-    <br>
-    {% endif %}
+        {% if path %}
+            <img src="{{ path }}" alt="Картинка не найдена">
+            <br>
+        {% endif %}
 
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    <div>
-        {{ message }}
-    </div>
-</form>
+        <p>
+            {{ form.location.label }}<br>
+            {{ form.location(class="form-control") }}<br>
+        </p>
+        <br>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>
+            {{ message }}
+        </div>
+    </form>
 
 {% endblock %}

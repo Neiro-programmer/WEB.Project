@@ -208,6 +208,9 @@
 }
 
 .map {
+    margin-left:7%;
+    margin-top: 5em;
+
     width: 600px;
     height: 600px;
     background: #333;

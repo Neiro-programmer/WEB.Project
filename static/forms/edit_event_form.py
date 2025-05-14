@@ -4,7 +4,7 @@ from wtforms import StringField, IntegerField, BooleanField, SubmitField, Passwo
 from wtforms.validators import DataRequired, Optional
 
 
-class AddEventForm(FlaskForm):
+class EditEventForm(FlaskForm):
     name = StringField('Название', validators=[DataRequired()])
     description = StringField('Описание', validators=[DataRequired()])
     ending_time = StringField('Время окончания в формате часы:минуты, пример: 17:25', validators=[DataRequired()])
@@ -14,6 +14,5 @@ class AddEventForm(FlaskForm):
     category = SelectField('Категория', choices=sorted(
         ['Все', 'Спорт', 'Музыка', 'Искусство', 'Общение', 'Психология', 'Игры', 'Дегустация']),
                            validators=[DataRequired()])
-    location = StringField('Местоположение')
-
+    location = StringField('Укажите местоположение в формате: город, улица номер', validators=[DataRequired()])
     submit = SubmitField('Добавить')

@@ -1,42 +1,43 @@
 {% extends "BAZA.html" %}
 {% block content %}
-<p>
-    {% if current_user.is_authenticated %}
-    <br>
-    <a class="btn btn-primary" href="/add/event">Add event</a>
-    {% endif %}
-<form action="" method="post">
-    <div>{{ form.city.label }} {{form.city(class="form-control") }}</div>
-    <div> {{ form.categ.label }} {{ form.categ(class="form-control") }}</div>
-    <br>
-    <div>{{ form.submit(type="submit", class="btn btn-primary") }}</div>
-</form>
-</p>
-{% for event in events %}
-<div class="card" id="my_card">
-    <div class="card-body d-flex">
-        <img src="{{ event.file }}" alt="Такой картинки нет" class="event-image">
-        <div class="event-details">
-            <h4 class="card-title">{{ event.name }}</h4>
-            <h5 class="card-subtitle">Окончание: {{ event.ending_time }}</h5>
-            <div class="card-text">
-                <p>Описание: {{ event.description }} </p>
-                <p>Контакт: {{ event.contact }}</p>
-                <p>Тг: {{ event.telegram }}</p>
-                <p>Категория: {{ event.category }}</p>
+    <p>
+        {% if current_user.is_authenticated %}
+            <br>
+            <a class="btn btn-primary" href="/add/event">Add event</a>
+        {% endif %}
+    <form action="" method="post">
+        <div>{{ form.city.label }} {{ form.city(class="form-control") }}</div>
+        <div> {{ form.categ.label }} {{ form.categ(class="form-control") }}</div>
+        <br>
+        <div>{{ form.submit(type="submit", class="btn btn-primary") }}</div>
+    </form>
+    </p>
+    {% for event in events %}
+        <div class="card" id="my_card">
+            <div class="card-body d-flex">
+                <img src="{{ event.file }}" alt="Такой картинки нет" class="event-image"
+                     onerror="this.onerror=null; this.src='../static/img/default.png';">
+                <div class="event-details">
+                    <h4 class="card-title">{{ event.name }}</h4>
+                    <h5 class="card-subtitle">Окончание: {{ event.ending_time }}</h5>
+                    <div class="card-text">
+                        <p>Описание: {{ event.description }} </p>
+                        <p>Контакт: {{ event.contact }}</p>
+                        <p>Тг: {{ event.telegram }}</p>
+                        <p>Категория: {{ event.category }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<a class="btn btn-primary" href="/get_route/event/{{ event.id }}" style="margin-left: 16%; margin-top: 5px">Get
-    route</a>
-{% if current_user.id in moderators or current_user.id in admins or current_user.id == event.user_id %}
-<a class="btn btn-warning" href="/edit/event/{{ event.id }}" style="margin-top: 5px">Edit Event</a>
-{% endif %}
-{% if current_user.id in admins or current_user.id == event.user_id %}
-<a class="btn btn-danger" href="/delete/event/{{ event.id }}" style="margin-top: 5px">Delete Event</a>
-{% endif %}
-<br>
-{% endfor %}
+        <a class="btn btn-primary" href="/get_route/event/{{ event.id }}" style="margin-left: 16%; margin-top: 5px">Get
+            route</a>
+        {% if current_user.id in moderators or current_user.id in admins or current_user.id == event.user_id %}
+            <a class="btn btn-warning" href="/edit/event/{{ event.id }}" style="margin-top: 5px">Edit Event</a>
+        {% endif %}
+        {% if current_user.id in admins or current_user.id == event.user_id %}
+            <a class="btn btn-danger" href="/delete/event/{{ event.id }}" style="margin-top: 5px">Delete Event</a>
+        {% endif %}
+        <br>
+    {% endfor %}
 
 {% endblock %}

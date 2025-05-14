@@ -12,4 +12,5 @@ asyncio
 pygame_gui
 pygame
 dnspython
-
+pandas
+lxml
