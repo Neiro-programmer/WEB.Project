@@ -11,3 +11,8 @@ aiohttp
 asyncio
 pygame_gui
 pygame
+mimetypes
+email
+os
+smtplib
+dns.resolver
