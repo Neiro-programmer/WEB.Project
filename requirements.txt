@@ -6,8 +6,6 @@ sqlalchemy
 flask-restful
 alembic
 flask_jwt_simple
-aiohttp
-asyncio
 pygame_gui
 pygame
 dnspython
