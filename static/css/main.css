@@ -15,6 +15,17 @@
     overflow: hidden;
 }
 
+#codeform {
+    margin-left: 550px;
+    margin-right: 550px;
+    margin-top: 15px;
+}
+
+#eml {
+    margin-top: 40px;
+    text-align: center;
+}
+
 .event-image {
     width: 180px;
     height: auto;
