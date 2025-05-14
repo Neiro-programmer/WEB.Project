@@ -17,19 +17,21 @@ def send_email(email, subject, text, attachments):
     msg['From'] = addr_from
     msg['To'] = email
     msg['Subject'] = subject
+    try:
 
-    body = text
-    msg.attach(MIMEText(body, 'plain'))
+        body = text
+        msg.attach(MIMEText(body, 'plain'))
 
-    process_attachments(msg, attachments)
+        process_attachments(msg, attachments)
 
-    server = smtplib.SMTP_SSL(os.getenv('HOST'), int(os.getenv("PORT")))
-    server.login(addr_from, password)
+        server = smtplib.SMTP_SSL(os.getenv('HOST'), int(os.getenv("PORT")))
+        server.login(addr_from, password)
 
-    server.send_message(msg)
-    server.quit()
-    return True
-
+        server.send_message(msg)
+        server.quit()
+        return True
+    except Exception as e:
+        return False
 
 
 def process_attachments(msg, attachments):

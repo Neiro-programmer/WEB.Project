@@ -20,12 +20,17 @@ from static.forms.loginform import LoginForm
 from static.forms.registerform import RegisterForm
 from static.forms.add_event_form import AddEventForm
 from static.forms.sorting_city_name import SortingForm
+from dotenv import load_dotenv
+import os
+from werkzeug.security import generate_password_hash, check_password_hash
+from data.db_session import SqlAlchemyBase
+from flask import session
 
 app = Flask(__name__)
 ADMINS_ID = [1, 2]
 MODERATORS_ID = [3]
+load_dotenv()
 us = None
-
 
 
 def make_secret_key():
@@ -100,21 +105,25 @@ def register():
         us = user
         # db_sess.add(user)
         # db_sess.commit()
-        return redirect(f"/extra_code/{form.email.data}/{randint(100000, 999999)}")
+        extracode = randint(100000, 999999)
+        session['extracode'] = extracode
+        code = generate_password_hash(str(extracode))
+        return redirect(f"/extra_code/{form.email.data}/{code}")
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
 
 
-@app.route('/extra_code/<email>/<int:extracode>', methods=['GET', 'POST'])
-def generate_extra_code(email, extracode):
+@app.route('/extra_code/<email>/<extrac>', methods=['GET', 'POST'])
+def generate_extra_code(email, extrac):
     global us
     form = ExtraCodeForm()
-    send_email(email, 'NearMe_code',
-               f'''Введите 6-значный код на нашем сайте NearMe, чтобы подтвердить вашу регистрацию.
-Код для подтверждения регистрации: {extracode}
+    extra = session.get('extracode')
+    res = send_email(email, 'NearMe_code',
+                     f'''Введите 6-значный код на нашем сайте NearMe, чтобы подтвердить вашу регистрацию.
+Код для подтверждения регистрации: {extra}
 Не сообщайте код никому!''', [])
-    if form.validate_on_submit():
+    if form.validate_on_submit() and res:
         code = form.code.data
-        if code == extracode:
+        if code == extra:
             db_sess = db_session.create_session()
             db_sess.add(us)
             db_sess.commit()
@@ -125,8 +134,16 @@ def generate_extra_code(email, extracode):
             # НУЖНО ЧТОБЫ ПЕРЕКИДЫВАЛ НА СТРАНИЦУ С ПРОФИЛЕМ, А НЕ НА ПЕРВУЮ
             return redirect("/")
         else:
-            return render_template('extra_code.html', message="Коды не совпали, введите код повторно", mail=email, form=form)
+            return render_template('extra_code.html', message="Коды не совпали, введите код повторно", mail=email,
+                                   form=form)
+    elif not res:
+        return render_template('extra_code.html',
+                               message=f"Письмо не было доставлено, так его распознали, как спам, для регистрации "
+                                       f"используйте почту mail.ru, yandex.ru, list.ru или напишите в тг: @iDotrey",
+                               mail=email,
+                               form=form)
     return render_template("extra_code.html", mail=email, form=form)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
