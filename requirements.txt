@@ -4,11 +4,10 @@ flask_wtf
 requests
 sqlalchemy
 flask-restful
-alembic
-flask_jwt_simple
-pygame_gui
-pygame
 dnspython
 pandas
 lxml
 dotenv
+h5py
+typing-extensions
+wheel
