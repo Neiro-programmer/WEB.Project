@@ -21,6 +21,8 @@ from static.forms.sorting_city_name import SortingForm
 app = Flask(__name__)
 ADMINS_ID = [1, 2]
 MODERATORS_ID = [3]
+us = None
+
 
 
 def make_secret_key():
@@ -77,23 +79,51 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    global us
     form = RegisterForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user:
             return render_template('register.html', message="Пользователь с таким email уже существует", form=form)
+        if not check_email(form.email.data):
+            return render_template('register.html', message="Почта не действительна", form=form)
         user = User(
             email=form.email.data,
             name=form.name.data,
             surname=form.surname.data,
         )
         user.set_password(form.password.data)
-        db_sess.add(user)
-        db_sess.commit()
-        return redirect("/")
+        us = user
+        # db_sess.add(user)
+        # db_sess.commit()
+        return redirect(f"/extra_code/{form.email.data}/{randint(100000, 999999)}")
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
 
+
+@app.route('/extra_code/<email>/<int:extracode>', methods=['GET', 'POST'])
+def generate_extra_code(email, extracode):
+    global us
+    form = ExtraCodeForm()
+    send_email(email, 'NearMe_code',
+               f'''Введите 6-значный код на нашем сайте NearMe, чтобы подтвердить вашу регистрацию.
+Код для подтверждения регистрации: {extracode}
+Не сообщайте код никому!''', [])
+    if form.validate_on_submit():
+        code = form.code.data
+        if code == extracode:
+            db_sess = db_session.create_session()
+            db_sess.add(us)
+            db_sess.commit()
+            send_email(email, 'NearMe',
+                       'Если вам пришло это письмо, то вы успешно зарегистрировались на нашем сайте NearMe!',
+                       ['kartina.jpg'])
+            us = None
+            # НУЖНО ЧТОБЫ ПЕРЕКИДЫВАЛ НА СТРАНИЦУ С ПРОФИЛЕМ, А НЕ НА ПЕРВУЮ
+            return redirect("/")
+        else:
+            return render_template('extra_code.html', message="Коды не совпали, введите код повторно", mail=email, form=form)
+    return render_template("extra_code.html", mail=email, form=form)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -142,6 +172,8 @@ def add_event():
             category=form.category.data,
         )
         try:
+            # Нужно прописать, чтобы была ещё дата и время начала события, важно!!!!
+            # Желательно ещё маркировать прошедшие и предстоящие события, по фозможности фильтровать или хотя бы размещать по релевантности
             ending_time = form.ending_time.data
             hh, mm = ending_time.split(':')
             if int(hh) < 24 and int(mm) < 60 and int(hh) >= 0 and int(mm) >= 0:
