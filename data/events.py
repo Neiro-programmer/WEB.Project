@@ -3,11 +3,10 @@ import datetime
 import sqlalchemy
 from flask_login import UserMixin
 from sqlalchemy import orm, Enum
-from sqlalchemy_serializer import SerializerMixin
 from .db_session import SqlAlchemyBase
 
 
-class Event(SqlAlchemyBase, UserMixin, SerializerMixin):
+class Event(SqlAlchemyBase, UserMixin):
     __tablename__ = 'events'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
