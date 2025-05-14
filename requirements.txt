@@ -7,3 +7,7 @@ MarkupSafe
 waitress
 Werkzeug
 sqlalchemy
+flaks-login
+flask_wtf
+requests
+pandas
