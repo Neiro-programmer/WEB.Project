@@ -3,7 +3,6 @@ flask-login
 flask_wtf
 requests
 sqlalchemy
-SQLAlchemy-serializer
 flask-restful
 alembic
 flask_jwt_simple
