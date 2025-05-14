@@ -2,7 +2,7 @@ import os
 import string
 from datetime import datetime
 from os import abort
-from random import shuffle, sample, random, choices
+from random import shuffle, sample, random, choices, randint
 import sqlalchemy
 from flask import url_for, Flask, render_template, redirect, request
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
@@ -13,6 +13,9 @@ from data.db_session import global_init
 from data import db_session
 from data.events import Event
 from data.users import User
+from mail_sender import send_email
+from proverka import check_email
+from static.forms.extracodeform import ExtraCodeForm
 from static.forms.loginform import LoginForm
 from static.forms.registerform import RegisterForm
 from static.forms.add_event_form import AddEventForm
