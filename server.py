@@ -105,7 +105,7 @@ def register():
         # db_sess.commit()
         db_sess.add(user)
         db_sess.commit()
-        return redirect('/')
+        return 'оваотаовтовтвотаоватвоатвоатвоаоаоваотаовтоват'
     else:
         return render_template('register.html', message="Неправильные данные", form=form)
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
@@ -375,7 +375,7 @@ def profile(id):
             if form.password.data != 'Пароль зашифрован и не будет показан, но вы можете его изменить':
                 user.set_password(form.password.data)
             db_sess.commit()
-            return redirect(f"/")
+            return redirect("/")
     else:
         print(form.errors)
     return render_template('profile.html', form=form)
