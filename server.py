@@ -105,43 +105,43 @@ def register():
         # db_sess.commit()
         db_sess.add(user)
         db_sess.commit()
-        return redirect("/")
+        return redirect('/')
     else:
         return render_template('register.html', message="Неправильные данные", form=form)
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
 
 
-@app.route('/extra_code/<email>/<extrac>', methods=['GET', 'POST'])
-def generate_extra_code(email, extrac):
-    global us
-    form = ExtraCodeForm()
-    extra = session.get('extracode')
-    res = send_email(email, 'NearMe_code',
-                     f'''Введите 6-значный код на нашем сайте NearMe, чтобы подтвердить вашу регистрацию.
-Код для подтверждения регистрации: {extra}
-Не сообщайте код никому!''', [])
-    if form.validate_on_submit() and res:
-        code = form.code.data
-        if code == extra:
-            db_sess = db_session.create_session()
-            db_sess.add(us)
-            db_sess.commit()
-            send_email(email, 'NearMe',
-                       'Если вам пришло это письмо, то вы успешно зарегистрировались на нашем сайте NearMe!',
-                       ['kartina.jpg'])
-            us = None
-            # НУЖНО ЧТОБЫ ПЕРЕКИДЫВАЛ НА СТРАНИЦУ С ПРОФИЛЕМ, А НЕ НА ПЕРВУЮ
-            return redirect("/")
-        else:
-            return render_template('extra_code.html', message="Коды не совпали, введите код повторно", mail=email,
-                                   form=form)
-    elif not res:
-        return render_template('extra_code.html',
-                               message=f"Письмо не было доставлено, так его распознали, как спам, для регистрации "
-                                       f"используйте почту mail.ru, yandex.ru, list.ru или напишите в тг: @iDotrey",
-                               mail=email,
-                               form=form)
-    return render_template("extra_code.html", mail=email, form=form)
+# @app.route('/extra_code/<email>/<extrac>', methods=['GET', 'POST'])
+# def generate_extra_code(email, extrac):
+#     global us
+#     form = ExtraCodeForm()
+#     extra = session.get('extracode')
+#     res = send_email(email, 'NearMe_code',
+#                      f'''Введите 6-значный код на нашем сайте NearMe, чтобы подтвердить вашу регистрацию.
+# Код для подтверждения регистрации: {extra}
+# Не сообщайте код никому!''', [])
+#     if form.validate_on_submit() and res:
+#         code = form.code.data
+#         if code == extra:
+#             db_sess = db_session.create_session()
+#             db_sess.add(us)
+#             db_sess.commit()
+#             send_email(email, 'NearMe',
+#                        'Если вам пришло это письмо, то вы успешно зарегистрировались на нашем сайте NearMe!',
+#                        ['kartina.jpg'])
+#             us = None
+#             # НУЖНО ЧТОБЫ ПЕРЕКИДЫВАЛ НА СТРАНИЦУ С ПРОФИЛЕМ, А НЕ НА ПЕРВУЮ
+#             return redirect("/")
+#         else:
+#             return render_template('extra_code.html', message="Коды не совпали, введите код повторно", mail=email,
+#                                    form=form)
+#     elif not res:
+#         return render_template('extra_code.html',
+#                                message=f"Письмо не было доставлено, так его распознали, как спам, для регистрации "
+#                                        f"используйте почту mail.ru, yandex.ru, list.ru или напишите в тг: @iDotrey",
+#                                mail=email,
+#                                form=form)
+#     return render_template("extra_code.html", mail=email, form=form)
 
 
 @app.errorhandler(404)
@@ -383,4 +383,4 @@ def profile(id):
 
 if __name__ == '__main__':
     global_init('db/near_me.sqlite')
-    serve(app, port=8080, host='127.0.0.1')
+    serve(app, port=5000, host='127.0.0.1')
