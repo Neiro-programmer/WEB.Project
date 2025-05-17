@@ -90,7 +90,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    print('d2wdwewefdew')
+    return 'dasdaasdasdasd'
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
