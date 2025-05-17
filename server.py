@@ -24,6 +24,7 @@ from static.forms.add_event_form import AddEventForm
 from static.forms.sorting_city_name import SortingForm
 from dotenv import load_dotenv
 import os
+from waitress import serve
 from werkzeug.security import generate_password_hash, check_password_hash
 from data.db_session import SqlAlchemyBase
 from flask import session
@@ -386,4 +387,4 @@ def profile(id):
 
 if __name__ == '__main__':
     global_init('db/near_me.sqlite')
-    app.run(port=8080, host='127.0.0.1')
+    serve(app, port=8080, host='127.0.0.1')
