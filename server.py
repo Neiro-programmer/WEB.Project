@@ -90,7 +90,6 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    return render_template("login.html", form=form)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
@@ -106,9 +105,7 @@ def register():
         # db_sess.commit()
         db_sess.add(user)
         db_sess.commit()
-        print("Redirecting to home page...")
-        return redirect('/')
-
+        return redirect("/")
     else:
         return render_template('register.html', message="Неправильные данные", form=form)
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
