@@ -111,7 +111,7 @@ def register():
         extracode = randint(100000, 999999)
         session['extracode'] = extracode
         code = generate_password_hash(str(extracode))
-        return redirect(f"/extra_code/{form.email.data}/{code}")
+        return redirect(url_for('extra_code', email=form.email.data, code=code))
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
 
 
