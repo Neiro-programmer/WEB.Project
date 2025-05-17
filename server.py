@@ -106,6 +106,8 @@ def register():
         db_sess.add(user)
         db_sess.commit()
         return redirect("/")
+    else:
+        return render_template('register.html', message="Неправильные данные", form=form)
     return render_template('register.html', message="Пожалуйста, введите данные о себе", form=form)
 
 
