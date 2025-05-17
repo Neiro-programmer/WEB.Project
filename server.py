@@ -14,7 +14,6 @@ from data import db_session
 from data.events import Event
 from data.users import User
 from mail_sender import send_email
-from proverka import check_email
 from static.forms.edit_event_form import EditEventForm
 from static.forms.edit_profile_info import EditProfile
 from static.forms.extracodeform import ExtraCodeForm
@@ -34,7 +33,6 @@ app = Flask(__name__)
 ADMINS_ID = [1, 2]
 MODERATORS_ID = [3]
 load_dotenv()
-us = None
 
 
 def make_secret_key():
@@ -91,22 +89,18 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    global us
     form = RegisterForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user:
             return render_template('register.html', message="Пользователь с таким email уже существует", form=form)
-        if not check_email(form.email.data):
-            return render_template('register.html', message="Почта не действительна", form=form)
         user = User(
             email=form.email.data,
             name=form.name.data,
             surname=form.surname.data,
         )
         user.set_password(form.password.data)
-        us = user
         # db_sess.add(user)
         # db_sess.commit()
         db_sess.add(user)
